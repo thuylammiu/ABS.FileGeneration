@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "S4epzxMZ88pISEyvTz5YnSBThMhr7A4vLX+kMleZ1oA=",
+  "Source": "ABS.FileGenerationAPI",
+  "BasePath": "_content/ABS.FileGenerationAPI",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}

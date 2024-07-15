@@ -22,7 +22,7 @@
 <script>
     $(document).ready(function () {
         $('#btnDownloadFromClient').on('click', function () {
-            var url = 'https://localhost:7170/api/ExcelGeneration/client/download';
+            var url = 'https://localhost:7170/api/ExcelGeneration/download';
             const data = {FileName: "DataGenerator.xls", SheetName: "sheet1" }
 
             const $button = $(this);

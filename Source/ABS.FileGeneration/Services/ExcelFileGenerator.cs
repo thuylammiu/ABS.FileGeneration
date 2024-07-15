@@ -44,8 +44,10 @@ namespace ABS.FileGeneration.Services
                     row++;
                 }
 
+                // Save file in a temp folder, not memory, avoid memmory overloading, 
+                // File in temp folder will be destroyed automatically.
                 workSheet.Cells.AutoFitColumns();
-                string filePath = Path.Combine(Path.GetTempPath(), fileName);
+                string filePath = Path.Combine(Path.GetTempPath(), fileName); 
                 await _fileService.SaveAsync(package, filePath);
 
                 return _fileService.OpenRead(filePath);

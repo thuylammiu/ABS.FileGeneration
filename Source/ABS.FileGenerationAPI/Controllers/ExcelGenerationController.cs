@@ -21,20 +21,12 @@ namespace ABS.FileGenerationAPI.Controllers
 
         }
 
-        [HttpPost("server/download")]
-        [Authorize]
+        [HttpPost("download")]       
         public async Task<IActionResult> GenerateExcelServer([FromBody] FileGenerationDataRequest bodyRequest)
         {
 
             return await GenerateExcel(bodyRequest);
-        }
-
-        [HttpPost("client/download")]        
-        public async Task<IActionResult> GenerateExcelClient([FromBody] FileGenerationDataRequest bodyRequest)
-        {
-
-            return await GenerateExcel(bodyRequest);
-        }
+        }        
 
 
         private async Task<IActionResult> GenerateExcel( FileGenerationDataRequest bodyRequest)

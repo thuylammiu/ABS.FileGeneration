@@ -26,46 +26,37 @@ namespace ABS.WebApp
             string apiUrl = ConfigurationManager.AppSettings["backEndUrl"];
             try
             {
-                string token = await AuthenticateApi();
-                if (string.IsNullOrEmpty(token))
+                using (var client = new HttpClient())
                 {
-                    LogError("Invalid Permission to download file");
-                    ShowErrorMessage("Invalid Permission to download file");
-                }
-                else
-                {
-                    using (var client = new HttpClient())
+
+                    var body = new FileGenerationDataRequest
                     {
+                        FileType = "excel",
+                        FileName = "DataGenerator.xls",
+                        SheetName = "sheet1"
+                    };
+                    
 
-                        var body = new FileGenerationDataRequest
-                        {
-                            FileType = "excel",
-                            FileName = "DataGenerator.xls",
-                            SheetName = "sheet1"
-                        };
-                        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                    var response = await client.PostAsJson<FileGenerationDataRequest>(apiUrl + "ExcelGeneration/download", body);
 
-                        var response = await client.PostAsJson<FileGenerationDataRequest>(apiUrl + "ExcelGeneration/server/download", body);
+                    if (response.IsSuccessStatusCode)
+                    {
+                        byte[] fileContent = await response.Content.ReadAsByteArrayAsync();
 
-                        if (response.IsSuccessStatusCode)
-                        {
-                            byte[] fileContent = await response.Content.ReadAsByteArrayAsync();                            
+                        Response.Clear();
+                        Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+                        Response.AddHeader("Content-Disposition", $"attachment; filename={body.FileName}");
 
-                            Response.Clear();
-                            Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";                           
-                            Response.AddHeader("Content-Disposition", $"attachment; filename={body.FileName}");
-
-                            Response.BinaryWrite(fileContent);
-                            Response.End();
-                        }
-                        else
-                        {
-                            var errorContent = await response.Content.ReadAsStringAsync();
-                            LogError($"API Error: {response.StatusCode} - {errorContent}");
-                            ShowErrorMessage("Unable to generate Excel file. Please try again later.");
-                        }
-
+                        Response.BinaryWrite(fileContent);
+                        Response.End();
                     }
+                    else
+                    {
+                        var errorContent = await response.Content.ReadAsStringAsync();
+                        LogError($"API Error: {response.StatusCode} - {errorContent}");
+                        ShowErrorMessage("Unable to generate Excel file. Please try again later.");
+                    }
+
                 }
             }
             catch (HttpRequestException ex)
